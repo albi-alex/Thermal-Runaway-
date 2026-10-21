@@ -1,0 +1,188 @@
+{
+  "dataset": {
+    "file_path": "C:\\Users\\lenovo\\.gemini\\antigravity\\scratch\\cstr-thermal-runaway\\backend\\data\\cstr_synthetic_dataset.csv",
+    "row_count": 10000,
+    "column_count": 5,
+    "columns": [
+      "Time (min)",
+      "Coolant Temp (K)",
+      "Reactor Temp (K)",
+      "CA (mol/L)",
+      "Condition"
+    ],
+    "data_types": {
+      "Time (min)": "float64",
+      "Coolant Temp (K)": "int64",
+      "Reactor Temp (K)": "float64",
+      "CA (mol/L)": "float64",
+      "Condition": "object"
+    },
+    "missing_values": {
+      "Time (min)": 0,
+      "Coolant Temp (K)": 0,
+      "Reactor Temp (K)": 0,
+      "CA (mol/L)": 0,
+      "Condition": 0
+    },
+    "duplicate_rows": 7110,
+    "unique_rows": 2890,
+    "time_min": 0.0,
+    "time_max": 10.0,
+    "total_duration_minutes": 10.0,
+    "sampling_interval_minutes": 0.0,
+    "sampling_interval_seconds": 0.0,
+    "coolant_temp_trajectories": [
+      290,
+      300,
+      305
+    ],
+    "reactor_temp_range_K": [
+      312.52,
+      441.14
+    ],
+    "condition_counts": {
+      "Safe": 9901,
+      "Critical": 99
+    },
+    "critical_rows_dedup": 197,
+    "critical_temperature_390K_reached": true,
+    "sufficient_15min_future_coverage": false,
+    "imbalance_explanation": "The primary dataset cstr_synthetic_dataset.csv contains only 3 operational trajectories (Tc = 290 K, 300 K, 305 K). Only the Tc = 305 K trajectory enters thermal runaway (197 unique critical points, representing ~0.93% of unique rows). To prevent severe minority underfitting and enable robust trajectory-level evaluation without temporal leakage, physics-guided supplementary trajectories are synthesized using the exact CSTR ODEs."
+  },
+  "summary": {
+    "primary_dataset": "cstr_synthetic_dataset.csv",
+    "total_rows": 10000,
+    "unique_rows": 2890,
+    "train_rows": 5306,
+    "test_rows": 604,
+    "test_positives": 195,
+    "test_negatives": 409,
+    "threshold": 0.35,
+    "prediction_horizon_min": 15.0,
+    "critical_temperature_K": 390.0,
+    "split_type": "Grouped Trajectory Split (Held-out scenarios, no temporal leakage)"
+  },
+  "confusion_matrix": {
+    "tp": 195,
+    "fp": 45,
+    "tn": 364,
+    "fn": 0
+  },
+  "state_metrics": {
+    "accuracy": 0.925497,
+    "recall": 1.0,
+    "precision": 0.8125,
+    "specificity": 0.889976,
+    "false_alarm_rate": 0.110024,
+    "f1_score": 0.896552,
+    "roc_auc": 0.999737,
+    "average_precision": 0.999426,
+    "brier_score": 0.033033
+  },
+  "classification_report": {
+    "0": {
+      "precision": 1.0,
+      "recall": 0.8899755501222494,
+      "f1-score": 0.9417852522639069,
+      "support": 409.0
+    },
+    "1": {
+      "precision": 0.8125,
+      "recall": 1.0,
+      "f1-score": 0.896551724137931,
+      "support": 195.0
+    },
+    "accuracy": 0.9254966887417219,
+    "macro avg": {
+      "precision": 0.90625,
+      "recall": 0.9449877750611246,
+      "f1-score": 0.919168488200919,
+      "support": 604.0
+    },
+    "weighted avg": {
+      "precision": 0.9394660596026491,
+      "recall": 0.9254966887417219,
+      "f1-score": 0.9271817125543618,
+      "support": 604.0
+    }
+  },
+  "event_metrics": {
+    "total_runaway_events": 1,
+    "detected_runaway_events": 1,
+    "event_detection_rate": 1.0,
+    "false_alarm_rate": 0.110024,
+    "prediction_horizon_minutes": 15.0
+  },
+  "feature_importances": [
+    {
+      "feature": "temperature_obs",
+      "importance": 0.20466,
+      "description": "Current observed reactor temperature [K]"
+    },
+    {
+      "feature": "reactor_coolant_temp_diff",
+      "importance": 0.17132,
+      "description": "Reactor-to-coolant temperature driving force T - Tc [K]"
+    },
+    {
+      "feature": "concentration",
+      "importance": 0.10813,
+      "description": "Current reactant concentration CA [kmol/m^3]"
+    },
+    {
+      "feature": "cooling_coefficient",
+      "importance": 0.10171,
+      "description": "Available cooling capacity U [min^-1]"
+    },
+    {
+      "feature": "trailing_temp_slope",
+      "importance": 0.08713,
+      "description": "Causal 1-min trailing temperature slope [K/min]"
+    },
+    {
+      "feature": "trailing_temp_max",
+      "importance": 0.0866,
+      "description": "Maximum observed temperature in trailing 1-min window [K]"
+    },
+    {
+      "feature": "heat_removal",
+      "importance": 0.05742,
+      "description": "Mechanistic heat removal U * (T - Tc) [K/min]"
+    },
+    {
+      "feature": "heating_rate",
+      "importance": 0.05643,
+      "description": "Causal instantaneous heating rate dT/dt [K/min]"
+    },
+    {
+      "feature": "net_thermal_drive",
+      "importance": 0.05113,
+      "description": "Net thermal drive q_gen - q_rem [K/min]"
+    },
+    {
+      "feature": "heat_generation",
+      "importance": 0.04544,
+      "description": "Mechanistic heat generation beta * k(T) * CA [K/min]"
+    },
+    {
+      "feature": "feed_temperature",
+      "importance": 0.01728,
+      "description": "Current feed temperature Tf [K]"
+    },
+    {
+      "feature": "thermal_acceleration",
+      "importance": 0.01184,
+      "description": "Causal thermal acceleration d^2T/dt^2 [K/min^2]"
+    },
+    {
+      "feature": "residence_time",
+      "importance": 0.00089,
+      "description": "Reactor residence time tau = V / Q [min]"
+    },
+    {
+      "feature": "feed_concentration",
+      "importance": 0.0,
+      "description": "Feed reactant concentration CAf [kmol/m^3]"
+    }
+  ]
+}
