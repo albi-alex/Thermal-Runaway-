@@ -1,0 +1,787 @@
+{
+  "summary": {
+    "total_test_states": 902,
+    "total_test_trajectories": 4,
+    "critical_events_evaluated": 2,
+    "safe_trajectories_evaluated": 2,
+    "warning_threshold": 0.35,
+    "prediction_horizon_min": 15.0,
+    "critical_temperature_K": 390.0,
+    "primary_dataset": "cstr_synthetic_dataset.csv",
+    "total_rows": 10000,
+    "unique_rows": 2890,
+    "train_rows": 5848,
+    "test_rows": 902,
+    "test_positives": 600,
+    "test_negatives": 302,
+    "split_type": "Grouped Trajectory Split (Held-out scenarios, no temporal leakage)"
+  },
+  "state_metrics": {
+    "accuracy": 0.973392,
+    "recall": 0.963333,
+    "precision": 0.996552,
+    "specificity": 0.993377,
+    "false_alarm_rate": 0.006623,
+    "f1_score": 0.979661,
+    "roc_auc": 0.989614,
+    "average_precision": 0.995595,
+    "brier_score": 0.050639
+  },
+  "confusion_matrix": {
+    "tp": 578,
+    "fp": 2,
+    "tn": 300,
+    "fn": 22
+  },
+  "event_metrics": {
+    "total_critical_events": 2,
+    "warned_before_crossing": 2,
+    "warned_at_or_after_only": 0,
+    "lead_time": {
+      "mean_lead_time_min": 9.15,
+      "median_lead_time_min": 9.15,
+      "min_lead_time_min": 7.0,
+      "max_lead_time_min": 11.3,
+      "pct_warned_ge_15m": 0.0,
+      "pct_warned_ge_10m": 50.0,
+      "pct_warned_ge_5m": 100.0,
+      "warned_before_crossing_count": 2,
+      "warned_at_or_after_only_count": 0
+    },
+    "critical_events_details": [
+      {
+        "trajectory_id": "sim_runaway_cooling_failure_82_early",
+        "actual_crossing_time_min": 7.1,
+        "first_ml_warning_time_min": 0.1,
+        "measured_lead_time_min": 7.0,
+        "warned_before_crossing": true,
+        "warned_ge_15m": false,
+        "warned_ge_10m": false,
+        "warned_ge_5m": true
+      },
+      {
+        "trajectory_id": "sim_runaway_cooling_failure_82_mid",
+        "actual_crossing_time_min": 11.3,
+        "first_ml_warning_time_min": 0.0,
+        "measured_lead_time_min": 11.3,
+        "warned_before_crossing": true,
+        "warned_ge_15m": false,
+        "warned_ge_10m": true,
+        "warned_ge_5m": true
+      }
+    ],
+    "safe_trajectories_false_alarm_rate": 0.006623,
+    "safe_trajectories_details": [
+      {
+        "trajectory_id": "sim_safe_mild_coolant_rise",
+        "safe_points_count": 151,
+        "false_alarm_points": 0,
+        "false_alarm_rate": 0.0
+      },
+      {
+        "trajectory_id": "sim_safe_steady_state_test",
+        "safe_points_count": 151,
+        "false_alarm_points": 2,
+        "false_alarm_rate": 0.0132
+      }
+    ]
+  },
+  "physics_time_to_event_evaluation": {
+    "mean_absolute_error_min": 0.03,
+    "median_absolute_error_min": 0.0,
+    "evaluated_samples": 15,
+    "method": "physics_forward_simulation",
+    "limitations": "The physics forward simulation accurately forecasts time-to-critical under the condition that current cooling capacity and feed temperature remain constant. If unmodelled disturbances or active cooling restoration occurs in the future, the projected time will dynamically adjust."
+  },
+  "feature_importances": [
+    {
+      "feature": "reactor_coolant_temp_diff",
+      "importance": 0.19913,
+      "description": "Reactor-to-coolant temperature driving force T - Tc [K]"
+    },
+    {
+      "feature": "heat_generation",
+      "importance": 0.14025,
+      "description": "Mechanistic heat generation beta * k(T) * CA [K/min]"
+    },
+    {
+      "feature": "temperature_obs",
+      "importance": 0.12089,
+      "description": "Current observed reactor temperature [K]"
+    },
+    {
+      "feature": "cooling_coefficient",
+      "importance": 0.11676,
+      "description": "Available cooling capacity U [min^-1]"
+    },
+    {
+      "feature": "net_thermal_drive",
+      "importance": 0.11284,
+      "description": "Net thermal drive q_gen - q_rem [K/min]"
+    },
+    {
+      "feature": "concentration",
+      "importance": 0.07856,
+      "description": "Current reactant concentration CA [kmol/m^3]"
+    },
+    {
+      "feature": "trailing_temp_max",
+      "importance": 0.07114,
+      "description": "Maximum observed temperature in trailing 1-min window [K]"
+    },
+    {
+      "feature": "heat_removal",
+      "importance": 0.05249,
+      "description": "Mechanistic heat removal U * (T - Tc) [K/min]"
+    },
+    {
+      "feature": "feed_temperature",
+      "importance": 0.04125,
+      "description": "Current feed temperature Tf [K]"
+    },
+    {
+      "feature": "trailing_temp_slope",
+      "importance": 0.03766,
+      "description": "Causal 1-min trailing temperature slope [K/min]"
+    },
+    {
+      "feature": "heating_rate",
+      "importance": 0.01337,
+      "description": "Causal instantaneous heating rate dT/dt [K/min]"
+    },
+    {
+      "feature": "residence_time",
+      "importance": 0.01269,
+      "description": "Reactor residence time tau = V / Q [min]"
+    },
+    {
+      "feature": "thermal_acceleration",
+      "importance": 0.00297,
+      "description": "Causal thermal acceleration d^2T/dt^2 [K/min^2]"
+    },
+    {
+      "feature": "feed_concentration",
+      "importance": 0.0,
+      "description": "Feed reactant concentration CAf [kmol/m^3]"
+    }
+  ],
+  "calibration": [
+    {
+      "bin": "[0.0, 0.1]",
+      "bin_center": 0.05,
+      "mean_pred": 0.05,
+      "fraction_positive": 0.0,
+      "count": 0
+    },
+    {
+      "bin": "[0.1, 0.2]",
+      "bin_center": 0.15,
+      "mean_pred": 0.1341,
+      "fraction_positive": 0.0294,
+      "count": 34
+    },
+    {
+      "bin": "[0.2, 0.3]",
+      "bin_center": 0.25,
+      "mean_pred": 0.2555,
+      "fraction_positive": 0.0316,
+      "count": 158
+    },
+    {
+      "bin": "[0.3, 0.4]",
+      "bin_center": 0.35,
+      "mean_pred": 0.3227,
+      "fraction_positive": 0.1831,
+      "count": 142
+    },
+    {
+      "bin": "[0.4, 0.5]",
+      "bin_center": 0.45,
+      "mean_pred": 0.4488,
+      "fraction_positive": 1.0,
+      "count": 28
+    },
+    {
+      "bin": "[0.5, 0.6]",
+      "bin_center": 0.55,
+      "mean_pred": 0.55,
+      "fraction_positive": 0.0,
+      "count": 0
+    },
+    {
+      "bin": "[0.6, 0.7]",
+      "bin_center": 0.65,
+      "mean_pred": 0.65,
+      "fraction_positive": 0.0,
+      "count": 0
+    },
+    {
+      "bin": "[0.7, 0.8]",
+      "bin_center": 0.75,
+      "mean_pred": 0.7925,
+      "fraction_positive": 1.0,
+      "count": 1
+    },
+    {
+      "bin": "[0.8, 0.9]",
+      "bin_center": 0.85,
+      "mean_pred": 0.8683,
+      "fraction_positive": 1.0,
+      "count": 6
+    },
+    {
+      "bin": "[0.9, 1.0]",
+      "bin_center": 0.95,
+      "mean_pred": 0.9967,
+      "fraction_positive": 1.0,
+      "count": 533
+    }
+  ],
+  "curves": {
+    "roc": [
+      {
+        "fpr": 0.0,
+        "tpr": 0.0
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.55
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.5767
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.59
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.595
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6017
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6067
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6133
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6183
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6283
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6517
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.66
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.6783
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7033
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7167
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.725
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7433
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7533
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7633
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7717
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7767
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.7833
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.805
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.8217
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.8483
+      },
+      {
+        "fpr": 0.0,
+        "tpr": 0.9617
+      },
+      {
+        "fpr": 0.0066,
+        "tpr": 0.9633
+      },
+      {
+        "fpr": 0.0099,
+        "tpr": 0.965
+      },
+      {
+        "fpr": 0.0132,
+        "tpr": 0.97
+      },
+      {
+        "fpr": 0.0728,
+        "tpr": 0.97
+      },
+      {
+        "fpr": 0.0795,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.1225,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.1556,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.1821,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.2086,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.2252,
+        "tpr": 0.9717
+      },
+      {
+        "fpr": 0.2351,
+        "tpr": 0.9767
+      },
+      {
+        "fpr": 0.2815,
+        "tpr": 0.9767
+      },
+      {
+        "fpr": 0.2848,
+        "tpr": 0.98
+      },
+      {
+        "fpr": 0.3146,
+        "tpr": 0.9833
+      },
+      {
+        "fpr": 0.3278,
+        "tpr": 0.985
+      },
+      {
+        "fpr": 0.3377,
+        "tpr": 0.985
+      },
+      {
+        "fpr": 0.351,
+        "tpr": 0.9883
+      },
+      {
+        "fpr": 0.3675,
+        "tpr": 0.99
+      },
+      {
+        "fpr": 0.394,
+        "tpr": 0.9933
+      },
+      {
+        "fpr": 0.404,
+        "tpr": 0.9967
+      },
+      {
+        "fpr": 0.4139,
+        "tpr": 0.9967
+      },
+      {
+        "fpr": 0.4868,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.5033,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.5662,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.5861,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.6325,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.6854,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.7119,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.745,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.8311,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.8411,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.8576,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.894,
+        "tpr": 0.9983
+      },
+      {
+        "fpr": 0.9238,
+        "tpr": 1.0
+      },
+      {
+        "fpr": 1.0,
+        "tpr": 1.0
+      }
+    ],
+    "precision_recall": [
+      {
+        "recall": 1.0,
+        "precision": 0.6652
+      },
+      {
+        "recall": 1.0,
+        "precision": 0.6711
+      },
+      {
+        "recall": 1.0,
+        "precision": 0.6772
+      },
+      {
+        "recall": 1.0,
+        "precision": 0.6842
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.6893
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.6957
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7047
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7131
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.72
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7269
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.735
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7432
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7516
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7611
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7689
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7779
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7871
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.7955
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.8073
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.8161
+      },
+      {
+        "recall": 0.9983,
+        "precision": 0.8251
+      },
+      {
+        "recall": 0.9933,
+        "precision": 0.8312
+      },
+      {
+        "recall": 0.99,
+        "precision": 0.8378
+      },
+      {
+        "recall": 0.9883,
+        "precision": 0.8459
+      },
+      {
+        "recall": 0.985,
+        "precision": 0.8578
+      },
+      {
+        "recall": 0.9833,
+        "precision": 0.8664
+      },
+      {
+        "recall": 0.98,
+        "precision": 0.8737
+      },
+      {
+        "recall": 0.9767,
+        "precision": 0.8906
+      },
+      {
+        "recall": 0.9717,
+        "precision": 0.9095
+      },
+      {
+        "recall": 0.9717,
+        "precision": 0.9225
+      },
+      {
+        "recall": 0.9717,
+        "precision": 0.9449
+      },
+      {
+        "recall": 0.9717,
+        "precision": 0.9573
+      },
+      {
+        "recall": 0.97,
+        "precision": 0.97
+      },
+      {
+        "recall": 0.97,
+        "precision": 0.9831
+      },
+      {
+        "recall": 0.9667,
+        "precision": 0.9932
+      },
+      {
+        "recall": 0.96,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.9467,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.9333,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.92,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.9067,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.8933,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.88,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.8667,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.8533,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.8383,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.825,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.81,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.795,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.7717,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.7517,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.7367,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.6783,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.6283,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.6017,
+        "precision": 1.0
+      },
+      {
+        "recall": 0.5783,
+        "precision": 1.0
+      }
+    ]
+  },
+  "dataset": {
+    "file_path": "C:\\Users\\lenovo\\.gemini\\antigravity\\scratch\\cstr-thermal-runaway\\backend\\data\\cstr_synthetic_dataset.csv",
+    "row_count": 10000,
+    "column_count": 5,
+    "columns": [
+      "Time (min)",
+      "Coolant Temp (K)",
+      "Reactor Temp (K)",
+      "CA (mol/L)",
+      "Condition"
+    ],
+    "data_types": {
+      "Time (min)": "float64",
+      "Coolant Temp (K)": "int64",
+      "Reactor Temp (K)": "float64",
+      "CA (mol/L)": "float64",
+      "Condition": "object"
+    },
+    "missing_values": {
+      "Time (min)": 0,
+      "Coolant Temp (K)": 0,
+      "Reactor Temp (K)": 0,
+      "CA (mol/L)": 0,
+      "Condition": 0
+    },
+    "duplicate_rows": 7110,
+    "unique_rows": 2890,
+    "time_min": 0.0,
+    "time_max": 10.0,
+    "total_duration_minutes": 10.0,
+    "sampling_interval_minutes": 0.0,
+    "sampling_interval_seconds": 0.0,
+    "coolant_temp_trajectories": [
+      290,
+      300,
+      305
+    ],
+    "reactor_temp_range_K": [
+      312.52,
+      441.14
+    ],
+    "condition_counts": {
+      "Safe": 9901,
+      "Critical": 99
+    },
+    "critical_rows_dedup": 197,
+    "critical_temperature_390K_reached": true,
+    "prediction_horizon_minutes": 15.0,
+    "explanation": "The primary dataset cstr_synthetic_dataset.csv contains 3 trajectories spanning 10.0 minutes. Because 10 minutes is shorter than the 15-minute forecast horizon, safe states in the raw dataset have incomplete 15-minute future windows and are excluded according to strict causal rules. To properly represent the 15-minute horizon, 30-minute physics-based trajectories covering diverse safe and runaway onset times are synthesized using the exact CSTR ODEs."
+  },
+  "classification_report": {
+    "0": {
+      "precision": 0.9316770186335404,
+      "recall": 0.9933774834437086,
+      "f1-score": 0.9615384615384616,
+      "support": 302.0
+    },
+    "1": {
+      "precision": 0.996551724137931,
+      "recall": 0.9633333333333334,
+      "f1-score": 0.9796610169491525,
+      "support": 600.0
+    },
+    "accuracy": 0.9733924611973392,
+    "macro avg": {
+      "precision": 0.9641143713857356,
+      "recall": 0.978355408388521,
+      "f1-score": 0.970599739243807,
+      "support": 902.0
+    },
+    "weighted avg": {
+      "precision": 0.9748309247340219,
+      "recall": 0.9733924611973392,
+      "f1-score": 0.9735933764457948,
+      "support": 902.0
+    }
+  }
+}
